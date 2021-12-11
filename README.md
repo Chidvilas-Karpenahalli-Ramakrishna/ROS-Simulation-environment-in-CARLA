@@ -28,8 +28,7 @@ The following versions are used for the present setup.
 - [ROS](#ros)
   - [ROS installation](#ros-installation) 
   - [ROS-bridge integration](#ros-bridge-integration)
-- [Gather data from CARLA](#gather-data-from-carla)
-- [Test ROS-bridge integration](#test-ros-bridge-integration)
+  - [Test ROS-bridge integration](#test-ros-bridge-integration)
 - [Known issues](#known-issues)
 
 
@@ -71,7 +70,7 @@ Different versions of CARLA can be found in the [CARLA repository](https://githu
 
 ### Testing CARLA installation:
 
-Open a terminal and navigate to `/carla` folder and type `./CarlaUE4.sh` to launch the simulator and use `W`, `A`, `S` and `D` keys along with mouse `left button` to explore the simulation environment. There are two ways of launching the CARLA simulator. One is by using **Vulkan** and another is by **OpenGL**. All options can be found in [CARLA rendering options](https://carla.readthedocs.io/en/latest/adv_rendering_options/). Some examples for running CARLA server on a computer without a powerful GPU would be `./CarlaUE4.sh -opengl -quality-level=Low` **or** `./CarlaUE4.sh -opengl -windowed -ResX100 -ResY=400 -benchmark -fps=10`.
+Open a terminal and navigate to `/carla` folder and type export the Python path using `export PYTHONPATH=$PYTHONPATH:<path to carla folder>/carla/PythonAPI/carla/dist/carla-0.9.11-py3.7-linux-x86_64.egg` to export the Python 3.7 path. The type `./CarlaUE4.sh` to launch the simulator and use `W`, `A`, `S` and `D` keys along with mouse `left button` to explore the simulation environment. There are two ways of launching the CARLA simulator. One is by using **Vulkan** and another is by **OpenGL**. All options can be found in [CARLA rendering options](https://carla.readthedocs.io/en/latest/adv_rendering_options/). Some examples for running CARLA server on a computer without a powerful GPU would be `./CarlaUE4.sh -opengl -quality-level=Low` **or** `./CarlaUE4.sh -opengl -windowed -ResX100 -ResY=400 -benchmark -fps=10`.
 
 ### Running some python example files:
 
@@ -81,17 +80,41 @@ A file named `shk_example.py` is provided here as an example to illustrate the d
 
 ## ROS:
 
+**Robotics Operation System (ROS)** helps us develop robotics applications. CARLA can be integrated with **ROS bridge** which enables two-way communication with CARLA server. This means that any information from CARLA gets transferred to ROS topics and using ROS, commands can be transferred to CARLA as well. Here, we conduct a simple demonstration where we make the Ego vehicle in CARLA to go in circles. To install and integrate ROS-bridge, first ROS needs to be installed. Please refer to [CARLA ROS-bridge](https://carla.readthedocs.io/en/0.9.11/ros_installation/) for detailed information.
+
+**Note:** Please make sure you change the version at the bottom right corner in the website to **0.9.11**. 
+
 ### ROS installation:
+Please note that to use the latest version of ROS i.e. ROS Noetic, all softwares should match. ROS Noetic works only on Ubuntu 20.04 Focal Fosa. Lower versions of Ubuntu don't support ROS Noetic. ROS Noetic is supported by CARLA 0.9.11 and it allows us to work on Python 3. If you observe carefully, this is the reason why we chose CARLA 0.9.11 which by default works on Python 3.7 and this was also the reason why we created a conda environment with Python 3.7.10. 
+
+A detailed installation instruction for ROS Noetic can be found on the [ROS website](http://wiki.ros.org/noetic/Installation/Ubuntu). The following [Youtube video](https://www.youtube.com/watch?v=PowY8dV36DY) can be used for reference. Please check your ROS installation before moving forward with the ROS-bridge installation and integration.
 
 
 ### ROS-bridge integration:
+Once ROS Noetic is installed, please refer to [CARLA website](https://carla.readthedocs.io/en/0.9.11/ros_installation/) for installation instructions. Please follow the easy and straight-forward instructions for installation from **Source repository** within the same conda virtual environment `carla_shk`. 
+
+**Note:** Please make sure to replace **Kinetic** with **Noetic** in all relevant places during installation. 
 
 
-## Gather data from CARLA:
+### Test ROS-bridge integration:
 
+**Note:** Before testing ROS-brige, it is important to bring to your notice that some packages might be installed while installing the required ROS dependencies from the previous step. If the testing throws an error saying **\<some package> missing**, please manually install the relevant package using **conda installation** or **pip installation** within the conda environment.
 
-## Test ROS-bridge integration:
+**Note:** Please also note that trying to run ROS using **ZSH** will cause errors. Please use **bash** terminal  to execute all commands.
 
+##### Steps:
 
-## Known issues:
+1. Open the **first** terminal then activate the conda environment by typing `conda activate carla_shk`. Then export the Python path using `export PYTHONPATH=$PYTHONPATH:<path to carla folder>/carla/PythonAPI/carla/dist/carla-0.9.11-py3.7-linux-x86_64.egg`. Navigate to the `carla` folder and press `./CarlaUE4.sh -opengl -quality-level=Low` or use any other rendering option to open CARLA simulator. Keep the simulator running as this is the server. 
+
+2. Open the **second** terminal then activate the conda environment by typing `conda activate carla_shk`. Then export the Python path using `export PYTHONPATH=$PYTHONPATH:<path to carla folder>/carla/PythonAPI/carla/dist/carla-0.9.11-py3.7-linux-x86_64.egg`. Now add the path for ROS bridge repository download by typing `source ~/carla-ros-bridge/catkin_ws/devel/setup.bash`.
+
+**Note:** Please make sure that you don't set the source path permanently as this would interfere with other workspaces.
+
+Now start **rviz** by typing `roslaunch carla_ros_bridge carla_ros_bridge_with_rviz.launch`. Now you should see a new rviz window.  
+
+3. Open the **third** terminal and then activate the conda environment by typing `conda activate carla_shk`. Then export the Python path using `export PYTHONPATH=$PYTHONPATH:<path to carla folder>/carla/PythonAPI/carla/dist/carla-0.9.11-py3.7-linux-x86_64.egg` and then add the source by typing `source ~/carla-ros-bridge/catkin_ws/devel/setup.bash`. Now navigate to `<path to PythonAPI>/PythonAPI/examples`. Now run **manual_control.py** by typing `python manual_control.py --rolename=ego_vehicle`. This opens a Pygame environment where we see our EGO vehicle. 
+
+4. Open **fourth** terminal and then activate the conda environment by typing `conda activate carla_shk`. Then export the Python path using `export PYTHONPATH=$PYTHONPATH:<path to carla folder>/carla/PythonAPI/carla/dist/carla-0.9.11-py3.7-linux-x86_64.egg` and then add the source by typing `source ~/carla-ros-bridge/catkin_ws/devel/setup.bash`. Now type `rostopic pub -1 /carla/ego_vehicle/vehicle_control_cmd carla_msgs/CarlaEgoVehicleControl "{throttle: 1.0, steer: 1.0}"`. This makes the throttle to be at max i.e. **1** and full right steer i.e. **1**. This makes the EGO to go in circles. 
+
+This shows a simple example on how to control agents in CARLA. 
 
