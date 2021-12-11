@@ -16,21 +16,15 @@ The following versions are used for the present setup.
 - **RAM:** 16 GB
 - **Space requirements:** ~9 GB for CARLA (additional maps require more space) **+** ~3 GB for ROS Noetic **+** ~50 MB for ROS-bridge **+** ~6-10 GB for Anaconda (depends on additional packages installed) 
 
-## Tasks:
-- [x] Setup Conda virtual environment
-- [x] Download, install and run CARLA simulator
-- [x] ROS installation
-- [x] ROS-bridge integration
-- [x] Develop basic python scripts to gather data from sensors in CARLA environment
-- [x] Test ROS commands to control CARLA agents
-- [x] Knows issues 
-
 
 ## Project Overview:
 - [Setup Conda virtual environment](#setup-conda-virtual-environment)
   - [Install anaconda](#install-anaconda)
   - [Create anaconda environment](#create-anaconda-environment)
-- [CARLA setup](#carla-setup)
+- [CARLA](#carla)
+  - [CARLA setup](#carla-setup)
+  - [Testing CARLA installation](#testing-carla-installation)
+  - [Running some python example files](#running-some-python-example-files)
 - [ROS](#ros)
   - [ROS installation](#ros-installation) 
   - [ROS-bridge integration](#ros-bridge-integration)
@@ -62,16 +56,30 @@ Follow the below steps to install Anaconda:
 We need to create anaconda environment for Python version 3.7.*
 
 #### Steps:
-1. Use the format `conda create -n <conda environment name> python=3.7.10`. In our case the conda environment is named `shk` and hence, the code changes to `conda create -n shk python=3.7.10`
-2. Activate the conda environment by typing `conda activate shk`
+1. Use the format `conda create -n <conda environment name> python=3.7.10`. In our case the conda environment is named `carla_shk` and hence, the code changes to `conda create -n carla_shk python=3.7.10`
+2. Activate the conda environment by typing `conda activate carla_shk`
 3. Deactivate conda environment by typing `conda deactivate`
 
 
-## CARLA setup:
+## CARLA:
 
+### CARLA setup:
+
+There are two ways of installing CARLA simulator. One is the Debian CARLA installation and the other is Package installtion. Here, package installation is preferred as it is quite easy. The options can be found in [CARLA quick start installation page](https://carla.readthedocs.io/en/0.9.11/start_quickstart/). 
+
+Different versions of CARLA can be found in the [CARLA repository](https://github.com/carla-simulator/carla/blob/master/Docs/download.md). Here, we use 0.9.11 CARLA version as it is the latest at the time of creating the repository. Please download [CARLA_0.9.11.tar.gz](https://github.com/carla-simulator/carla/releases/tag/0.9.11/) for Ubuntu. The file requires about 4 GB disk space. Once downloaded, extract the files to a folder named `carla`. When you explore the `carla` folder you should see a `CarlaUE4.sh` file which will be used to launch the CARLA simulator.
+
+### Testing CARLA installation:
+
+Open a terminal and navigate to `/carla` folder and type `./CarlaUE4.sh` to launch the simulator and use `W`, `A`, `S` and `D` keys along with mouse `left button` to explore the simulation environment. There are two ways of launching the CARLA simulator. One is by using **Vulkan** and another is by **OpenGL**. All options can be found in [CARLA rendering options](https://carla.readthedocs.io/en/latest/adv_rendering_options/). Some examples for running CARLA server on a computer without a powerful GPU would be `./CarlaUE4.sh -opengl -quality-level=Low` **or** `./CarlaUE4.sh -opengl -windowed -ResX100 -ResY=400 -benchmark -fps=10`.
+
+### Running some python example files:
+
+CARLA provides some example python files for testing. They can be found in `./carla/PythonAPI/examples`. You can start by running `spawn_npc.py` to spawn some traffic participants and try `manual_control.py` to control EGO manually within the CARLA environment. To run this file first open a terminal and run the CARLA simulator as mentioned above. Once the CARLA simulator is open, it acts as a server to which clients can connect to. In the present case each Python file you run acts as a client. You can open a new terminal, navigate to the `examples` folder and run each python file. Before running any python files please activate the conda environment using `conda activate carla_shk` and export the Python path using `export PYTHONPATH=$PYTHONPATH:<path to carla folder>/carla/PythonAPI/carla/dist/carla-0.9.11-py3.7-linux-x86_64.egg`. As you can see, CARLA 0.9.11 works with **Python 2.7** and **Python 3.7** by default. This is the reason for creating the conda environment using **Python 3.7.10**. If any other python version is desired, please build CARLA on your own. You can use [Linux build](https://carla.readthedocs.io/en/latest/build_linux/) or [Windows build](https://carla.readthedocs.io/en/latest/build_windows/) based on your preference.
+
+A file named `shk_example.py` is provided here as an example to illustrate the data-gathering capabilities of CARLA. Upon exploring the file you will see that there exists an **Ego** vehicle which is a **Tesla model 3** (_change the car based on your preference_). The code is written to gather **RGB-alpha images** and **semantic segmentation images** from the **camera** sensor and to gathered in **bird's eye view**. The gathered images are stored in a folder called `shk`. Before running the file please run `spawn_npc.py` provided by CARLA to add some traffic agents into the scene and then run `shk_example.py`. This runs the Ego autonomously in the CARLA environment and gathers data.
 
 ## ROS:
-  
 
 ### ROS installation:
 
