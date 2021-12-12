@@ -1,5 +1,9 @@
 # Developing a simulation environment in CARLA 
 
+<p align="center">
+<img src="https://github.com/Chidvilas-Karpenahalli-Ramakrishna/Simulation-environment-in-CARLA-/blob/main/CARLA_ROS_bridge.png" width="1000" height="500">
+</p>
+
 Welcome to this repository. Here we will see how to setup CARLA simulator, install ROS and how to integrate ROS-bridge. The repository also contains a basic python script to connect to CARLA simulator, attach sensors to the EGO vehicle and gather data from CARLA simulator. We will also see how to use basic ROS commands to control Ego vehicle in CARLA environment. Some know issues associated with using CARLA and ROS are documented as **Known issues:** under each section. These will be updated in the repository as more issues are encountered. Some common issues associated with CARLA and their solutions can be found in [CARLA github repository](https://github.com/carla-simulator/carla/issues).
 
 
